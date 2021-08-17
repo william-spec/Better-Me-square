@@ -48,11 +48,11 @@
   * animation.css：负责设定动画样式
   * topBar.css ：负责设定导航栏样式
 
-#### html
+#### html(view)
 
 主要用于展示通过js获取的数据
 
-* html文件夹：
+* html(view)文件夹：
   * square.html ：广场页
   * userPost.html ：用户动态页
   * detailContent.html：详情页
