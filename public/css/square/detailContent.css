@@ -16,7 +16,7 @@ body{
   background-color: #F5F5F6;
   position: fixed;
   top: 60px;
-  z-index: 990;
+  z-index: 999;
   box-sizing: border-box;
 }
 #text{
@@ -42,7 +42,7 @@ body{
   height: 60px;
   position: fixed;
   top: 210px;
-  z-index: 990;
+  z-index: 999;
   background-color: white;
 }
 #comments{
@@ -75,33 +75,12 @@ body{
   line-height: 42px;
   background-color: #A8DBFD;
   cursor: pointer;
-  position: relative;
 }
 #postComments div:hover{
   background-color: #87CEFC;
-}
-#postComments div .comment{
-  width: 25%;
-  height: 70%;
-  text-align: center;
-  line-height: 42px;
-  position: relative;
-}
-#postComments div .hide{
-  width: 50px;
-  position: absolute;
-  right: 0;
-  top: 20%;
-  transform: scale(0.3);
 }
 #masonry{
   width: 100%;
   position: absolute;
   top: 270px;
-}
-@media screen and (max-width: 700px) {
-  #postComments div .hide {
-    width: 35px;
-    top: 27%;
-  } 
 }

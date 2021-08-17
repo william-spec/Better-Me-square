@@ -1,4 +1,12 @@
-function post(){    //为发布按钮添加点击发布事件
+let profilePhoto = document.querySelector('.user-info').querySelector('img');   //获取自己的头像
+// profilePhoto.addEventListener('click', profileManage);
+// 登陆后显示为用户头像，否则为默认头像
+
+function post(){
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   let post = document.querySelector('#contentPublisher_post');
   post.addEventListener('click',() => {
     let value = document.querySelector('textarea').value;
@@ -7,19 +15,18 @@ function post(){    //为发布按钮添加点击发布事件
       return;
     } 
     document.querySelector('textarea').value = '';
-    let userPhotoSrc = document.querySelector('.user-info').querySelector('img').src;   //获取导航栏我的头像
     putItems(createContent([{
       'id': 1,
       'text': value,
       'imgSrc': '',
       'email': '',
-      'userPhotoSrc': userPhotoSrc,
+      'userPhotoSrc': '../../public/assets/topBar/user-pic.jpg',
       'userName': 'Me',
       'starsNum': 0,
       'commentsNum': 0,
-      'updateTime': getTime(),
+      'updateTime': year + '-' + month + '-' + day,
       'userSign': 'I am fine'
-    }]), false, getColumns(), masonry
+    }])
     );
   })
 }
@@ -48,29 +55,40 @@ function createContent(data){   //创建完整的展示内容框
     div.appendChild(detailDiv);
     divs.push(div);
   })
+  allDivs.push(...divs);    //添加到全局div数组中，用于判断是否进入视窗，懒加载
   return divs;
 }
 
 function deal(data){    //处理服务端返回的数据
+  localData.length = 0;
   for(let i = 0; i < data.length; i++){   //打乱数组顺序
     let r = Math.floor(Math.random() * data.length);
     let temp = data[i];
     data[i] = data[r];
     data[r] = temp;
   }
+  localData.push(...data)   /* 将请求的数据保存到本地 */
 }
 
-function getInitData(){   //初始化广场页面
+async function getInitData(){   //初始化广场页面
   //等待数据请求完毕后才渲染，使用async和await
-  putItems(createContent(search(req, deal)), false, getColumns(), masonry);
+  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
+  putItems(createContent(localData) /* 注意初始化数据一定要超出页面大小，否则初始化无法触发效果 */, false);
 }
 
-function getMoreData(){   //滚动条滚到底部获取更多数据
+async function getMoreData(){   //滚动条滚到底部获取更多数据
   req.start += req.num;
-  putItems(createContent(search(req, deal)), false, getColumns(), masonry);
+  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
+  putItems(createContent(localData), false);
 }
 
-let masonry = document.querySelector('#masonry');
+function postContent(){   //点击发布按钮发布内容
+  // let text = document.querySelector('contentPublisher_content').value;
+  // let imgSrc = document
+}
+
+let localData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
+
 let req = {
   type: 'square',   //请求类型
   start: 0,   //请求起始位置
@@ -84,5 +102,6 @@ window.onload = function(){
 }
 
 window.onresize = function(){
-  putItems([], true, getColumns(), masonry);   //重新渲染
+  columns = getColumns(itemWidth);    //更新页面尺寸后需要重新计算列数
+  putItems(allDivs, true);   //重新渲染
 }

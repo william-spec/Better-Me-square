@@ -165,14 +165,11 @@ img{
             right: 0;
             background-color: #fefefe;
             padding-top: 60px;
-            z-index: 1000;
         }
         .nav-active li{
             width: 80%;
             margin: 0 auto;
             border-bottom: 1px solid #333;
-            z-index: 1000;
-            background-color: white;
         }
 
         .nav-active a{

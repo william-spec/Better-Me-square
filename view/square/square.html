@@ -8,9 +8,10 @@
   <link rel="stylesheet" href="../../public/css/square/topBar.css">
   <link rel="stylesheet" href="../../public/css/square/square.css">
   <link rel="stylesheet" href="../../public/css/square/animation.css">
+  <link rel="stylesheet" href="../../public/assets/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-  <div id="trace">    <!-- 背景动画 -->
+  <div id="trace">
     <div id="ball"></div>
   </div>
   <div id="cover"></div>  <!-- 覆盖顶部，避免滚动时下面内容在fixed区域显示 -->
@@ -68,17 +69,17 @@
       <textarea id="contentPublisher_content" placeholder=""></textarea>
       <div id="contentPublisher_buttons">
         <button id="contentPublisher_post">发布</button>
-        <button id="contentPublisher_image"><img src="../../public/assets/icons/img.png"> <span>图片</span></button>
-        <button id="contentPublisher_plan"><img src="../../public/assets/icons/plan.png"><span>晒进度</span></button>
+        <button id="contentPublisher_image"><i class="fa fa-picture-o" aria-hidden="true"></i><span>图片</span></button>
+        <button id="contentPublisher_plan"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>晒进度</span></button>
       </div>
     </div>
   </div>
   <div id="masonry">
   </div>
   <script src="../../public/js/square/animation.js"></script>
-  <script src="../../public/js/square/topBar.js"></script>
   <script src="../../public/js/square/masonryLayout.js"></script>
-  <script src="../../public/js/square/dataShow.js"></script>
+  <script src="../../public/js/square/topBar.js"></script>
   <script src="../../public/js/square/square.js"></script>
+  <script src="../../public/js/square/dataShow.js"></script>
 </body>
 </html>

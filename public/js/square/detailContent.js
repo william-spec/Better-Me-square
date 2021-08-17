@@ -1,18 +1,4 @@
-function hide(){    //由于评论框会遮挡最下面评论，设置按钮对透明度进行更改
-  let comment = document.querySelector('#postComments');
-  let button = comment.querySelector('.hide');
-  if(comment.style.opacity !== '0.3'){
-    comment.style.opacity = 0.3;
-    button.style.transform = 'scale(0.3) rotate(180deg)';
-  }
-  else{
-    comment.style.opacity = 1;
-    button.style.transform = 'scale(0.3)';
-  }
-  event.stopPropagation();
-}
-
-function post(){    //给评论按钮添加点击事件
+function post(){
   let post = document.querySelector('#postComments').querySelector('div');
   post.addEventListener('click',() => {
     let value = document.querySelector('textarea').value;
@@ -21,17 +7,15 @@ function post(){    //给评论按钮添加点击事件
       return;
     } 
     document.querySelector('textarea').value = '';
-    let userPhotoSrc = document.querySelector('.user-info').querySelector('img').src;   //获取导航栏我的头像
     putItems(createContent([{
       'comment': value,
-      'commentUserEmail': '',
-      'commentUserPhoto': userPhotoSrc,
-      'commentUserName': 'Me'
-    }]), false, getColumns(), masonry
+      'commentUserEmail': me.email,
+      'commentUserPhoto': me.userPhotoSrc,
+      'commentUserName': me.userName
+    }])
     );
     let comments = document.querySelector('#comments');
-    let Num = parseInt(comments.innerText.match(/\d+/)[0]) + 1;
-    comments.innerText = '评论 ' + Num;
+    comments.innerText = '评论 ' + allDivs.length;
   })
 }
 
@@ -47,54 +31,65 @@ function createContent(data){   //创建完整框
     div.appendChild(commentsContent);
     divs.push(div);
   })
+  allDivs.push(...divs);    //添加到全局div数组中，用于判断是否进入视窗，懒加载
   return divs;
 }
 
-function getUserInfo(data){    //渲染帖子内容、我的头像、用户名、点赞数、更新时间
+function getUserInfo(obj){    //渲染帖子内容、我的头像、用户名、点赞数、更新时间
   let text = document.querySelector('#text');
-  text.innerHTML = data.text;
+  text.innerHTML = obj.text;
   let plan = document.querySelector('#plan');
-  plan.style.backgroundImage = 'url(' + data.imgSrc + ')';
+  plan.style.backgroundImage = 'url(' + obj.imgSrc + ')';
   plan.style.backgroundSize = '100% 100px';
   let fillblank = document.querySelector('#fillblank');
-  fillblank.appendChild(createStars(data.starsNum, '14px', '8px', '100px', '3px'));
-  fillblank.appendChild(createUpdateTime(data.updateTime, '14px', '11px'));
-  let userPhotoDiv = createUserPhoto(data.userPhotoSrc, '40px');
+  fillblank.appendChild(createStars(obj.starsNum, '14px', '8px', '100px', '3px'));
+  fillblank.appendChild(createUpdateTime(obj.updateTime, '14px', '11px'));
+  let userPhotoDiv = createUserPhoto(obj.userPhotoSrc, '40px');
   userPhotoDiv.style.backgroundImage = userPhotoDiv.getAttribute('data-src');
   fillblank.appendChild(userPhotoDiv);
-  fillblank.appendChild(createUserName(data.userName, '', '50px', '15px'));
+  fillblank.appendChild(createUserName(obj.userName, '', '50px', '15px'));
   let comments = document.querySelector('#comments');
-  comments.innerHTML += data.commentsNum;
+  comments.innerHTML += localData.length;
 }
 
-function getInitData(){    //获取个人发布
+function deal(data){    //处理服务端返回的数据
+  localData.length = 0;
+  localData.push(...data)   /* 将请求的数据保存到本地 */
+}
+
+async function getDetailContent(){    //获取个人发布
   let str = window.location.href.slice(window.location.href.indexOf('?') + 1);  //获取网址中的参数
   str = decodeURI(str.slice(str.indexOf('=') + 1));
-  let res = JSON.parse(str);
-  getUserInfo(res);
-  req.email = res.email;
-  req.id = res.id;
-  putItems(createContent(search(req)), false, getColumns(), masonry);
+  let obj = JSON.parse(str);
+  me = obj;
+  req.email = obj.email;
+  req.id = obj.id;
+  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
+  getUserInfo(obj);
+  putItems(createContent(localData) /* 注意初始化数据一定要超出页面大小，否则初始化无法触发效果 */, false);
 }
 
-function getMoreData(){   //滚动条滚到底部获取更多数据
+async function getMoreData(){   //滚动条滚到底部获取更多数据
   req.start += req.num;
-  putItems(createContent(search(req)), false, getColumns(), masonry);
+  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
+  putItems(createContent(localData), false);
 }
 
-let masonry = document.querySelector('#masonry');
+let me = {};
+let localData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
+  
 let req = {
   type: 'detailContent',   //请求类型
   start: 0,   //请求起始位置
   num: 32   //每次请求32条数据
 }
-
 window.onload = function(){
   post();
-  getInitData();
+  getDetailContent();
   window.addEventListener('scroll', () => { checkScroll(getMoreData); });
 }
 
 window.onresize = function(){
-  putItems([], true, getColumns(), masonry);   //重新渲染
+  columns = getColumns(itemWidth);    //更新页面尺寸后需要重新计算列数
+  putItems(allDivs, true);   //重新渲染
 }
