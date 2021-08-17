@@ -1,4 +1,4 @@
-## 广场模块
+## 广场模块（有服务端）
 
 ### 功能简介
 
@@ -18,7 +18,15 @@
 
 ### 程序结构
 
-主要集中于前端，包含html、css、js
+主要包含前、后端，包含html、css、js、server文件夹
+
+#### server
+
+主要负责服务端代码，与mongodb数据进行交互，使用ajax响应前端请求。
+
+主要包含以下文件：
+
+* test.js
 
 #### js
 
@@ -48,11 +56,11 @@
   * animation.css：负责设定动画样式
   * topBar.css ：负责设定导航栏样式
 
-#### html
+#### html(view)
 
 主要用于展示通过js获取的数据
 
-* html文件夹：
+* html(view)文件夹：
   * square.html ：广场页
   * userPost.html ：用户动态页
   * detailContent.html：详情页
