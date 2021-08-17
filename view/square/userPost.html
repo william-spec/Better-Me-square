@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人发布</title>
+  <link rel="stylesheet" href="../../public/css/square/reset.min.css">
+  <link rel="stylesheet" href="../../public/css/square/topBar.css">
+  <link rel="stylesheet" href="../../public/css/square/userPost.css">
+  <link rel="stylesheet" href="../../public/css/square/animation.css">
+</head>
+<body>
+  <div id="trace">    <!-- 背景动画 -->
+    <div id="ball"></div>
+  </div>
+  <div id="cover"></div>   <!-- 覆盖顶部，避免滚动时下面内容在fixed区域显示 -->
+  <!--外部容器-->
+  <div class="top-bar-wrapper">
+    <!-- 中间主体部分容器 -->
+    <div class="top-bar">
+
+        <!-- 网站的logo -->
+        <h1 class="logo">
+            <!-- 此处建议写上网站首页的地址 -->
+            <a href="/">
+                <img src="../../public/assets/topBar/logo.png">
+                <span>成为更好的自己</span>
+            </a>               
+        </h1>
+        
+
+        <!-- 菜单栏 -->
+        <div class="left-menu">
+            <!-- 创建菜单图标 -->
+            <ul class="menu-icon">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+
+
+            <!-- 创建菜单 -->
+            <ul class="nav">
+                <!-- 这里都要写在超链接里面 -->
+                <!-- 超链接的地址，写各个页面的地址 -->
+                <li><a href="#">个人计划</a></li>
+                <li><a href="#">我的笔记</a></li>
+                <li><a href="#">思维导图</a></li>
+                <li><a href="#">数据统计</a></li>
+                <li><a href="#">广场</a></li>
+            </ul>
+
+        </div>
+
+        
+
+        <!-- 用户信息 -->
+        <div class="user-info">
+            <!-- 这里是可以跳转到用户信息详细设置页的，写用户信息详细设置页的地址 -->
+            <a href="#">
+                <img src="../../public/assets/topBar/user-pic.jpg" alt="用户头像">
+            </a>
+        </div>
+    </div>
+  </div>
+  <div id="userInfo">
+    
+  </div>
+
+  <div id="masonry">
+  </div>
+  <script src="../../public/js/square/animation.js"></script>
+  <script src="../../public/js/square/topBar.js"></script>
+  <script src="../../public/js/square/userPost.js"></script>
+  <script src="../../public/js/square/masonryLayout.js"></script>
+  <script src="../../public/js/square/dataShow.js"></script>
+</body>
+</html>

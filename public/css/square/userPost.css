@@ -1,0 +1,33 @@
+body{
+  padding: 0;
+  margin: 0;
+}
+#cover{
+  width: 100%;
+  height: 210px;
+  background-color: white;
+  z-index: 900;
+  position: fixed;
+}
+#userInfo{
+  box-sizing: border-box;
+  width: 100%;
+  height: 150px;
+  background-color: #F5F5F6;
+  position: fixed;
+  top: 60px;
+  z-index: 990;
+}
+#masonry{
+  width: 90%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 230px;
+  background-color: aquamarine;
+}
+@media screen and (max-width: 700px) {
+  .item {
+    transform: scale(1.2, 1.1) translateX(10%); 
+  } 
+}

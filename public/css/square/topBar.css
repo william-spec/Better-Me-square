@@ -1,0 +1,199 @@
+/* 在PC端优先的情况下 */
+body{
+    width: 100%;
+    color: #333;
+}
+
+/* 重置页面中所有a的样式 */
+a{
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover{
+    color: #81ccff;
+}
+
+/* 重置页面中所有img的样式 */
+img{
+    vertical-align: bottom;
+}
+
+/* 最外层的容器 */
+.top-bar-wrapper{
+    width: 100%;
+    background-color: #fefefe;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .1);
+    position: fixed;
+    z-index: 999;
+}
+
+/* 主体部分容器 */
+.top-bar{
+    width: 90%;
+    margin: 0 auto;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 主菜单部分 */
+.left-menu{
+    /*设置弹性元素的弹性盒中布局的顺序*/
+    flex: auto;
+}
+
+/* 在PC端，menu-icon是隐藏的 */
+.menu-icon{
+    display: none;
+}
+
+/* 将nav设置为弹性盒 */
+.nav{
+    display: flex;
+    justify-content: space-around;
+    font-size: 14px;
+}
+
+.nav a{
+    display: block;
+    line-height: 48px;
+}
+
+/* 网页标题部分，由于没有将图片和文字合成一个统一的logo图片，所以要各自设置样式 */
+.logo a{
+    display: block;
+    height: 48px;
+    font-size: 12px;
+    color: #81ccff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family:"KaiTi";
+}
+
+.logo a:hover{
+    color: #81ccff;
+}
+
+.logo img{
+    width: 16px;
+    height: 16px;
+    margin-bottom: 6px;
+}
+
+/* 用户信息栏 */
+.user-info img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+
+
+/* 设置媒体查询 */
+@media only screen{
+    /* 断点 768px */
+    @media(max-width:767px){
+        /* 主菜单部分 */
+        .left-menu{
+            order: 1;
+            flex: 0;
+        }
+
+        /* 在移动端，icon部分是显示的 */
+        .menu-icon{
+            display: block;
+            width: 18px;
+            height: 48px;
+            position: relative;
+        }
+
+        .menu-icon li{
+            position: absolute;
+            background-color: #333;
+            width: 18px;
+            height: 1px;
+            transform-origin:left center;
+            transition: 0.3s;
+        }
+
+        /* 设置icon部分每一条横线的位置 */
+        .menu-icon li:nth-child(1){
+            top:18px;
+        }
+
+        .menu-icon li:nth-child(2){
+            top:24px;
+        }
+
+        .menu-icon li:nth-child(3){
+            top:30px;
+        }
+
+        /* 设置menu-icon部分点击之后的显示效果 */
+        .menu-icon-active li:nth-child(1){
+            /* 向下旋转 */
+            transform: rotateZ(40deg);
+        }
+
+        .menu-icon-active li:nth-child(2){
+            /* 隐藏 */
+            opacity: 0;
+        }
+
+        .menu-icon-active li:nth-child(3){
+            transform: rotateZ(-40deg);
+        }
+
+        /* 移动端nav部分默认是隐藏的 */
+        .nav{
+            display: none;
+        }
+
+        /* 设置nav部分显示状态的效果 */
+        .nav-active{
+            display: block;
+            position: absolute;
+            top:48px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: #fefefe;
+            padding-top: 60px;
+            z-index: 1000;
+        }
+        .nav-active li{
+            width: 80%;
+            margin: 0 auto;
+            border-bottom: 1px solid #333;
+            z-index: 1000;
+            background-color: white;
+        }
+
+        .nav-active a{
+            line-height: 40px;
+            font-size: 14px;
+            color: #333;
+        }
+        .nav-active a:active{
+            color: #81ccff;
+        }
+
+        /* 网页logo部分 */
+        .logo{
+            order: 2;
+        }
+
+        /* 网页用户信息部分 */
+        .user-info{
+            order: 3;
+        }
+
+    }
+
+}

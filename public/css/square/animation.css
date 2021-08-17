@@ -1,0 +1,40 @@
+#trace {
+  /* visibility: hidden; */
+  opacity: 1;
+  width: 508px;
+  height: 508px;
+  border: 2px solid black;
+  border-radius: 50%;
+  position: fixed;
+  background-color: #E7EAED;
+  top: 34%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#ball {
+  opacity: 1;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  /* z-index: -1; */    /* 设置了非默认定位属性的才有效 */
+  /* animation: animX 43200s cubic-bezier(0.36,0,0.64,1) -86400s infinite alternate, animY 43200s cubic-bezier(0.36,0,0.64,1)  -64800s infinite alternate; */
+  /* X轴延迟时间为-2倍周期，Y轴延迟时间为-1.5倍周期可以让小球从水平左端开始运动 */
+}
+@keyframes animX{
+    0% {left: -10px;}
+  100% {left: 500px;}
+}
+@keyframes animY{
+  0% {top: -10px; transform: scale(5);}
+  49%{background-color: red;transform: scale(5);}
+  51%{background-color: blue;transform: scale(3);}
+  100% {top: 500px;background-color: blue;transform: scale(3);}
+}
+@media screen and (max-width: 700px) {
+  #trace, #ball{
+    left: 50%;
+    transform: translate(-50%, -10%) scale(0.5);
+  }
+}
