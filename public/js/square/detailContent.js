@@ -22,13 +22,16 @@ function post(){    //给评论按钮添加点击事件
     } 
     document.querySelector('textarea').value = '';
     let userPhotoSrc = document.querySelector('.user-info').querySelector('img').src;   //获取导航栏我的头像
-    putItems(createContent([{
+    let data = insertData({   //数据更新到库并返回
+      'type': 'comment',
+      'email': res.email,
+      'id': res.id,
+      'commentUserEmail': 'me@qq.com',
       'comment': value,
-      'commentUserEmail': '',
       'commentUserPhoto': userPhotoSrc,
-      'commentUserName': 'Me'
-    }]), false, getColumns(), masonry
-    );
+      'commentUserName': 'Me',
+    });
+    putItems(createContent([data]), false, getColumns(), masonry);
     let comments = document.querySelector('#comments');
     let Num = parseInt(comments.innerText.match(/\d+/)[0]) + 1;
     comments.innerText = '评论 ' + Num;
@@ -68,9 +71,6 @@ function getUserInfo(data){    //渲染帖子内容、我的头像、用户名�
 }
 
 function getInitData(){    //获取个人发布
-  let str = window.location.href.slice(window.location.href.indexOf('?') + 1);  //获取网址中的参数
-  str = decodeURI(str.slice(str.indexOf('=') + 1));
-  let res = JSON.parse(str);
   getUserInfo(res);
   req.email = res.email;
   req.id = res.id;
@@ -82,6 +82,9 @@ function getMoreData(){   //滚动条滚到底部获取更多数据
   putItems(createContent(search(req)), false, getColumns(), masonry);
 }
 
+let str = window.location.href.slice(window.location.href.indexOf('?') + 1);  //获取网址中的参数
+str = decodeURI(str.slice(str.indexOf('=') + 1));
+let res = JSON.parse(str);
 let masonry = document.querySelector('#masonry');
 let req = {
   type: 'detailContent',   //请求类型

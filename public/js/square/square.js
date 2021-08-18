@@ -8,19 +8,16 @@ function post(){    //为发布按钮添加点击发布事件
     } 
     document.querySelector('textarea').value = '';
     let userPhotoSrc = document.querySelector('.user-info').querySelector('img').src;   //获取导航栏我的头像
-    putItems(createContent([{
-      'id': 1,
-      'text': value,
+    let data = insertData({   //数据更新到库并返回
+      'type': 'square',
+      'email': 'me@qq.com',
       'imgSrc': '',
-      'email': '',
+      'text': value,
       'userPhotoSrc': userPhotoSrc,
       'userName': 'Me',
-      'starsNum': 0,
-      'commentsNum': 0,
-      'updateTime': getTime(),
       'userSign': 'I am fine'
-    }]), false, getColumns(), masonry
-    );
+    });
+    putItems(createContent([data]), false, getColumns(), masonry);
   })
 }
 

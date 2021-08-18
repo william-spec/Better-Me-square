@@ -10,8 +10,18 @@ function getColumns(itemWidth = '200px'){    //获取当前窗口能放下的最
 function putItemsBiBao(){    //使用闭包避免将heights设置成全局变量，避免变量污染，闭包类似于创建了对于其内部函数的一个全局，在外部函数里内部函数外（全局）定义的变量就相当于在全局定义的变量，会保存其改变值，并且延长生命周期不会被释放
   let heights = [];    //记录一行中各列的高度
   return function (divs /* 框数组 */, resize /* 判断是否是页面大小变化 */, columns, box){    //根据列数进行摆放图片
-    allDivs.push(...divs);
-    if(resize) heights = [];    //如果是页面大小变化，需要初始化高度数组重新渲染
+    if(divs.length === 1){    //如果发表内容，那么将新发表内容放在头条位置刷新页面
+      allDivs.unshift(...divs);
+      heights = [];
+      divs = allDivs;
+      box.appendChild(divs[0]);
+    } 
+    else if(resize){
+      heights = [];
+      divs = allDivs;
+    }
+    else
+      allDivs.push(...divs);
     divs.forEach((div, index) => {    //将不显示图片的div添加到页面合适位置
       if(!resize) box.appendChild(div);
       if(div.style.width === '100%')
