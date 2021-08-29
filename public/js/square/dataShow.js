@@ -9,6 +9,7 @@ function createDiv(width = '200px', height = ''){   //创建包裹Div框
   div.style.height = height;
   div.style.position = 'absolute';
   div.onclick = jumpToDetail;
+  itemWidth = parseInt(width);
   return div;
 }
 
@@ -34,6 +35,7 @@ function createDivImg(src){    //晒进度
   divImg.style.boxSizing = 'border-box';
   divImg.style.border = '1px solid gray';
   divImg.style.backgroundSize =  divImg.style.width + ' 100px' ;
+  
   divImg.setAttribute('data-src', 'url(' + src + ')');   //先将src保存下来
   return divImg;
 }
@@ -167,13 +169,21 @@ function jumpToDetail(){
                         event.stopPropagation();    //阻止事件进一步冒泡
 }
 
-function ajaxSend(method, url, async, req, deal){    //使用ajax发送请求获取数据库数据
+function ajaxSend(req, deal){    //使用ajax发送请求获取数据库数据
   let xhr = new XMLHttpRequest();
-  xhr.open(method, url, async);
+  xhr.open(req.method, req.url, req.async);
   xhr.onreadystatechange = function(e){
     if(xhr.readyState === 4 && xhr.status === 200){
-        deal(JSON.parse(xhr.responseText).result);   //处理返回数据
+      deal(JSON.parse(xhr.responseText).result);   //处理返回数据
     }
   }
   xhr.send(JSON.stringify(req)/* 将JSON对象转换成字符串发送 */);
+}
+
+function getTime(){
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  return year + '-' + month + '-' + day;
 }

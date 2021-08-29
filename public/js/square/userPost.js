@@ -18,7 +18,6 @@ function createContent(data){   //创建完整框
     div.appendChild(detailDiv);
     divs.push(div);
   })
-  allDivs.push(...divs);    //添加到全局div数组中，用于判断是否进入视窗，懒加载
   return divs;
 }
 
@@ -35,31 +34,32 @@ function getUserInfo(userPhoto, userName, userSign){    //渲染我的头像、�
 }
 
 function deal(data){    //处理服务端返回的数据
-  localData.length = 0;
-  localData.push(...data)   /* 将请求的数据保存到本地 */
+  dbData.length = 0;
+  dbData.push(...data)   /* 将请求的数据保存到本地 */
 }
 
 async function getUserContent(){    //获取个人发布
-  let str = window.location.href.slice(window.location.href.indexOf('?'));
-  let email = str.split('&')[1].split('=')[1];
-  req.email = email;
-  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
-  getUserInfo(localData[0].userPhotoSrc, localData[0].userName, localData[0].userSign);
-  putItems(createContent(localData) /* 注意初始化数据一定要超出页面大小，否则初始化无法触发效果 */, false);
+  await ajaxSend(req, deal);
+  getUserInfo(dbData[0].userPhotoSrc, dbData[0].userName, dbData[0].userSign);
+  putItems(createContent(dbData), false, getColumns(), masonry);
 }
 
 async function getMoreData(){   //滚动条滚到底部获取更多数据
   req.start += req.num;
-  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
-  putItems(createContent(localData), false);
+  await ajaxSend(req, deal);
+  putItems(createContent(dbData), false, getColumns(), masonry);
 }
 
-let localData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
-
+let dbData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
+let str = window.location.href.slice(window.location.href.indexOf('?'));
+let email = str.split('&')[1].split('=')[1];
 let req = {
-  type: 'userPost',   //请求类型
+  method: 'POST',
+  async: false,
+  url: 'userPost',   //请求类型
   start: 0,   //请求起始位置
-  num: 32   //每次请求32条数据
+  num: 32,   //每次请求32条数据
+  email
 }
 
 window.onload = function(){
@@ -69,5 +69,5 @@ window.onload = function(){
 
 window.onresize = function(){
   columns = getColumns(itemWidth);    //更新页面尺寸后需要重新计算列数
-  putItems(allDivs, true);   //重新渲染
+  putItems([], true, getColumns(), masonry);   //重新渲染
 }

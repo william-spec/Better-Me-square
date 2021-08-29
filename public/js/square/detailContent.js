@@ -1,4 +1,18 @@
-function post(){
+function hide(){    //由于评论框会遮挡最下面评论，设置按钮对透明度进行更改
+  let comment = document.querySelector('#postComments');
+  let button = comment.querySelector('.hide');
+  if(comment.style.opacity !== '0.3'){
+    comment.style.opacity = 0.3;
+    button.style.transform = 'scale(0.3) rotate(180deg)';
+  }
+  else{
+    comment.style.opacity = 1;
+    button.style.transform = 'scale(0.3)';
+  }
+  event.stopPropagation();
+}
+
+function post(){    //评论功能
   let post = document.querySelector('#postComments').querySelector('div');
   post.addEventListener('click',() => {
     let value = document.querySelector('textarea').value;
@@ -7,15 +21,17 @@ function post(){
       return;
     } 
     document.querySelector('textarea').value = '';
-    putItems(createContent([{
+    let userPhotoSrc = document.querySelector('.user-info').querySelector('img').src;
+    let obj = {
       'comment': value,
-      'commentUserEmail': me.email,
-      'commentUserPhoto': me.userPhotoSrc,
-      'commentUserName': me.userName
-    }])
-    );
+      'commentUserEmail': 'me',
+      'commentUserPhoto': userPhotoSrc,
+      'commentUserName': 'Me'
+    }
+    updateData(obj);
     let comments = document.querySelector('#comments');
-    comments.innerText = '评论 ' + allDivs.length;
+    let num = comments.innerText.match(/\d+/g);
+    comments.innerText = '评论 ' + ++num;
   })
 }
 
@@ -31,7 +47,6 @@ function createContent(data){   //创建完整框
     div.appendChild(commentsContent);
     divs.push(div);
   })
-  allDivs.push(...divs);    //添加到全局div数组中，用于判断是否进入视窗，懒加载
   return divs;
 }
 
@@ -49,40 +64,59 @@ function getUserInfo(obj){    //渲染帖子内容、我的头像、用户名、
   fillblank.appendChild(userPhotoDiv);
   fillblank.appendChild(createUserName(obj.userName, '', '50px', '15px'));
   let comments = document.querySelector('#comments');
-  comments.innerHTML += localData.length;
+  comments.innerHTML += dbData.length;
 }
 
 function deal(data){    //处理服务端返回的数据
-  localData.length = 0;
-  localData.push(...data)   /* 将请求的数据保存到本地 */
+  if(data.length === 0)alert('已经到底啦');
+  dbData.length = 0;
+  dbData.push(...data)   /* 将请求的数据保存到本地 */
+}
+
+function dealInsertID(data){
+  req._id = data.insertedId;
 }
 
 async function getDetailContent(){    //获取个人发布
-  let str = window.location.href.slice(window.location.href.indexOf('?') + 1);  //获取网址中的参数
-  str = decodeURI(str.slice(str.indexOf('=') + 1));
-  let obj = JSON.parse(str);
-  me = obj;
-  req.email = obj.email;
-  req.id = obj.id;
-  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
-  getUserInfo(obj);
-  putItems(createContent(localData) /* 注意初始化数据一定要超出页面大小，否则初始化无法触发效果 */, false);
+  req.email = contentOwner.email;
+  req.id = contentOwner.id;
+  await ajaxSend(req, deal);
+  getUserInfo(contentOwner);
+  putItems(createContent(dbData), false, getColumns(), masonry);
 }
 
 async function getMoreData(){   //滚动条滚到底部获取更多数据
+  req.url = 'detailContent';
   req.start += req.num;
-  await ajaxSend('POST', 'http://localhost:3000', false, req, deal);
-  putItems(createContent(localData), false);
+  delete req._id;
+  await ajaxSend(req, deal);
+  putItems(createContent(dbData), false, getColumns(), masonry);
+  let comments = document.querySelector('#comments');
+  comments.innerText = '评论 ' + allDivs.length;
 }
 
-let me = {};
-let localData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
-  
+async function updateData(obj){   //滚动条滚到底部获取更多数据
+  req.url = 'insertDetailContent';
+  req.obj = obj;
+  await ajaxSend(req, dealInsertID);
+  delete req.obj;
+  req.url = 'detailContent';
+  await ajaxSend(req, deal);
+  putItems(createContent(dbData), false, getColumns(), masonry);
+}
+
+let str = window.location.href.slice(window.location.href.indexOf('?') + 1);  //获取网址中的参数
+str = decodeURI(str.slice(str.indexOf('=') + 1));
+let contentOwner = JSON.parse(str);
+let dbData = [];   //只保存当前次返回的数据，无需保存之前次返回的数据
 let req = {
-  type: 'detailContent',   //请求类型
+  method: 'POST',
+  async: false,
+  url: 'detailContent',   //请求类型
   start: 0,   //请求起始位置
   num: 32   //每次请求32条数据
 }
+
 window.onload = function(){
   post();
   getDetailContent();
@@ -91,5 +125,5 @@ window.onload = function(){
 
 window.onresize = function(){
   columns = getColumns(itemWidth);    //更新页面尺寸后需要重新计算列数
-  putItems(allDivs, true);   //重新渲染
+  putItems([], true, getColumns(), masonry);   //重新渲染
 }
