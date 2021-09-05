@@ -86,7 +86,7 @@ async function getDetailContent(){    //获取个人发布
 }
 
 async function getMoreData(){   //滚动条滚到底部获取更多数据
-  req.url = 'detailContent';
+  req.type = 'detailContent-query';
   req.start += req.num;
   delete req._id;
   await ajaxSend(req, deal);
@@ -96,11 +96,11 @@ async function getMoreData(){   //滚动条滚到底部获取更多数据
 }
 
 async function updateData(obj){   //滚动条滚到底部获取更多数据
-  req.url = 'insertDetailContent';
+  req.type = 'detailContent-insert';
   req.obj = obj;
   await ajaxSend(req, dealInsertID);
   delete req.obj;
-  req.url = 'detailContent';
+  req.type = 'detailContent-query';
   await ajaxSend(req, deal);
   putItems(createContent(dbData), false, getColumns(), masonry);
 }
@@ -112,7 +112,7 @@ let dbData = [];   //只保存当前次返回的数据，无需保存之前次�
 let req = {
   method: 'POST',
   async: false,
-  url: 'detailContent',   //请求类型
+  type: 'detailContent-query',   //请求类型
   start: 0,   //请求起始位置
   num: 32   //每次请求32条数据
 }

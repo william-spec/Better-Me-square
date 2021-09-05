@@ -10,10 +10,8 @@ let {router} = require('./node_modules/router');
 let server = http.createServer();
 //3.监听请求
 server.on('request', function(req, res){
-	//获取当前请求地址
-	let currentUrl = req.url;
-	//判断请求地址
-	router(currentUrl, req, res);
+	//根据不同请求进行路由
+	router(req, res);
 });
 //4.启动服务
 server.listen(3000, function(){

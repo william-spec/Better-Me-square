@@ -56,7 +56,7 @@ let email = str.split('&')[1].split('=')[1];
 let req = {
   method: 'POST',
   async: false,
-  url: 'userPost',   //请求类型
+  type: 'userPost-query',   //请求类型
   start: 0,   //请求起始位置
   num: 32,   //每次请求32条数据
   email
