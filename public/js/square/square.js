@@ -86,7 +86,7 @@ async function updateData(obj){   //滚动条滚到底部获取更多数据
   req.obj = obj;
   await ajaxSend(req, dealInsertID);
   delete req.obj;
-  req.url = 'square-query';
+  req.type = 'square-query';
   await ajaxSend(req, deal);
   putItems(createContent(dbData), false, getColumns(), masonry);
 }
