@@ -1,6 +1,6 @@
 //1.引入http模块
 let http = require('http')
-let {router} = require('./node_modules/router');
+let {router} = require('./router');
 
 // let url = require('url')
 // let querystring = require('querystring')
